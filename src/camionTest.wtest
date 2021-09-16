@@ -1,0 +1,41 @@
+import camion.*
+import cosas.*
+
+describe "Tests para la carga del camión" {
+
+	method initialize() {
+		camion.cargar(bumblebee)
+	}
+
+	test "Comprobar que se puede agregar carga al camión" {
+		const cargaInicial = camion.totalBultos()
+		camion.cargar(bumblebee)
+		assert.that(camion.totalBultos() == cargaInicial + 1)
+	}
+
+	test "Se descargan correctamentamente cosas del camión" {
+		camion.descargar(bumblebee)
+		assert.that(camion.totalBultos() == 0)
+	}
+
+	test "Evalúa la carga que tiene determinado peso" {
+		assert.that(camion.todoPesoPar())
+		assert.that(camion.hayAlgunoQuePesa(800))
+		assert.that(camion.tieneAlgoQuePesaEntre(750, 1000))
+		assert.notThat(camion.tieneAlgoQuePesaEntre(450, 490))
+	}
+
+	test "Evalúa el nivel de peligrosidad de la carga " {
+		assert.that(camion.elDeNivel(15) == bumblebee)
+		assert.notThat(camion.elDeNivel(20))
+	}
+
+	test "Evalúa el peso total correctamente" {
+		assert.that(camion.pesoTotal() == 800)
+		camion.cargar(bumblebee)
+		assert.that(camion.pesoTotal() == 1600)
+		assert.notThat(camion.excedidoDePeso())
+	}
+
+}
+
