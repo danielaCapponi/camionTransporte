@@ -8,27 +8,33 @@ object camion {
 		cosas.add(unaCosa)
 	}
 
-	method totalBultos() = cosas.size()
-
-	method tieneAlgoQuePesaEntre(min, max) = !cosas.isEmpty() && cosas.any({ cosa => cosa.peso().between(min, max) })
-
 	method descargar(unaCosa) {
 		cosas.remove(unaCosa)
 	}
 
-	method todoPesoPar() = !cosas.isEmpty() && cosas.all({ cosa => cosa.peso().even() })
+	method totalBultos() = cosas.size()
 
-	method hayAlgunoQuePesa(peso) = !cosas.isEmpty() && cosas.any({ cosa => cosa.peso() == peso })
+	method tieneAlgoQuePesaEntre(min, max) = !cosas.isEmpty() && cosas.any({ cosa => cosa.peso().between(min, max) })
 
-	method elDeNivel(nivel) = cosas.findOrElse({ cosa => cosa.nivelPeligrosidad() == nivel }, { false })
+	method todoPesoPar() = !cosas.isEmpty() && cosas.all{ cosa => cosa.peso().even() }
 
-	method pesoTotal() = cosas.sum({ cosa => cosa.peso() })
+	method hayAlgunoQuePesa(peso) = !cosas.isEmpty() && cosas.any{ cosa => cosa.peso() == peso }
+
+	method elDeNivel(nivel) = cosas.filter{ cosa => cosa.nivelPeligrosidad() == nivel }
+
+	method pesoTotal() = cosas.sum{ cosa => cosa.peso() }
 
 	method excedidoDePeso() = self.pesoTotal() > 2500
 
-	method objetosQueSuperanPeligrosidad(nivel) = cosas.findOrElse({ cosa => cosa.nivelPeligrosidad() > nivel }, { false })
+	method objetosQueSuperanPeligrosidad(nivelPeligrosidadAComparar) = cosas.filter({ cosa => cosa.nivelPeligrosidad() > nivelPeligrosidadAComparar })
 
-	method objetosMasPeligrososQue(cosaAComparar) = cosas.filtrar({ cosa => cosa.nivelDePeligrosidad() > cosaAComparar.nivelDePeligrosidad() })
+	method objetosMasPeligrososQue(cosaAComparar) = cosas.filter{ cosa => cosa.nivelPeligrosidad() > cosaAComparar.nivelPeligrosidad() }
 
+	method superaNivelPeligrosidad(nivelPeligrosidad) = cosas.any{cosa=>cosa.nivelPeligrosidad() >= nivelPeligrosidad}
+
+	method puedeCircularEnRuta(nivelMaximoPeligrosidad) = !self.excedidoDePeso() && !self.superaNivelPeligrosidad(nivelMaximoPeligrosidad)
+
+	method cosaMasPesada() = cosas.max {cosa=>cosa.peso()}
+	method pesos() = cosas.map{cosa=>cosa.peso()}
 }
 
