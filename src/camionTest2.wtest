@@ -1,15 +1,7 @@
-import camion.*
-import cosas.*
+import camion2.*
+import cosas2.*
 
 describe "Test para el camión" {
 
-	test "Comprobar que se puede agregar carga al camión" {
-		const cargaInicial = camion.totalBultos()
-		camion.cargar(bumblebee)
-		assert.that(camion.totalBultos() == cargaInicial + 1)
-	}
-
-// test "Comprobar que" {
-//	}
 }
 

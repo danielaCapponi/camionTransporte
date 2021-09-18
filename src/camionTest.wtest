@@ -4,49 +4,86 @@ import cosas.*
 describe "Tests para la carga del camión" {
 
 	method initialize() {
+		// Inicio el estado de las cosas
+		arenaAGranel.peso(150)
+		if (bumblebee.estaTransformadoEnAuto()) {
+			bumblebee.transformar()
+		}
+		if (!bateriaAntiaerea.tieneMisiles()) {
+			bateriaAntiaerea.manipularMisiles()
+		}
+		paqueteDeLadrillos.cantidadDeLadrillos(80)
+			// Cargo las cosas al camión
 		camion.cargar(bumblebee)
-		arenaAGranel.peso(2000)
+		camion.cargar(arenaAGranel)
+		camion.cargar(bateriaAntiaerea)
+		camion.cargar(paqueteDeLadrillos)
 	}
 
 	test "Comprobar que se puede agregar carga al camión" {
-		const cargaInicial = camion.totalBultos()
-		camion.cargar(bumblebee)
-		assert.that(camion.totalBultos() == cargaInicial + 1)
+		camion.cargar(knightRider)
+		assert.that(camion.hayAlgunoQuePesa(500))
 	}
 
 	test "Se descargan correctamentamente cosas del camión" {
 		camion.descargar(bumblebee)
-		assert.that(camion.totalBultos() == 0)
+		assert.notThat(camion.hayAlgunoQuePesa(30))
 	}
 
 	test "Evalúa la carga que tiene determinado peso" {
 		assert.that(camion.todoPesoPar())
 		assert.that(camion.hayAlgunoQuePesa(800))
 		assert.that(camion.tieneAlgoQuePesaEntre(750, 1000))
-		assert.notThat(camion.tieneAlgoQuePesaEntre(450, 490))
+		assert.notThat(camion.tieneAlgoQuePesaEntre(1, 10))
 	}
 
-	test "Evalúa el nivel de peligrosidad de la carga " {
-		assert.equals(bumblebee, camion.elDeNivel(15))
+	test "Evalúa el nivel de peligrosidad de cada objeto en la carga" {
+		assert.equals([ bateriaAntiaerea ], camion.objetosQueSuperanPeligrosidad(90))
+		assert.equals(bumblebee, camion.elDeNivel(30))
 		// En este test quise implementar el assert.throwsException, porque usaba el find en el mensaje elDeNivel y al no encontrar el valor indicado, devolvía error. Pero no pude hacerlo funcionar, no sabría cómo implementarlo. Entonces utilicé el findOrElse y forcé un falso en caso de no encontrarse el valor.
-		assert.notEquals(bumblebee, camion.elDeNivel(20))
+		assert.notThat(camion.elDeNivel(25))
 		assert.that(camion.superaNivelPeligrosidad(14))
-		assert.notThat(camion.superaNivelPeligrosidad(16))
+		assert.notThat(camion.superaNivelPeligrosidad(200))
 	}
 
 	test "Evalúa el peso total correctamente" {
-		assert.equals(800, camion.pesoTotal())
-		camion.cargar(bumblebee)
-		assert.equals(1600, camion.pesoTotal())
+		assert.equals(1410, camion.pesoTotal())
+		camion.descargar(bumblebee)
+		assert.equals(610, camion.pesoTotal())
 		assert.notThat(camion.excedidoDePeso())
-		camion.cargar(arenaAGranel)
+		camion.cargar(bumblebee)
+		camion.cargar(bumblebee)
+		camion.cargar(bumblebee)
 		assert.that(camion.excedidoDePeso())
 	}
 
 	test "Evalúa el peso de los objetos de la carga correctamente" {
-		camion.cargar(knightRider)
-		camion.cargar(arenaAGranel)
-		assert.equals(arenaAGranel, camion.cosaMasPesada())
+		assert.equals(bumblebee, camion.cosaMasPesada())
+	}
+
+	test "Puede comparar los objetos cargados con otros objetos" {
+		assert.equals(2, camion.objetosMasPeligrososQue(knightRider).size())
+	}
+
+	test "Evalúa correctamente si puede circular en ruta con peso permitido y evaluando niveles variados de peligrosidad máxima permitida" {
+		assert.that(camion.puedeCircularEnRuta(20000))
+		assert.notThat(camion.puedeCircularEnRuta(10))
+	}
+
+	test "Si se excede de peso, no puede viajar en ruta aunque no supere el nivel máximo de peligrosidad" {
+		camion.cargar(bumblebee)
+		camion.cargar(bumblebee)
+		camion.cargar(bumblebee)
+		assert.notThat(camion.puedeCircularEnRuta(20000))
+	}
+
+	test "Devuelve correctamente la cosa más pesada" {
+		assert.equals(bumblebee, camion.cosaMasPesada())
+	}
+
+	test "Devuelve los pesos de los objetos correctamente" {
+		const pesos = camion.pesos()
+		assert.equals(1410, pesos.sum())
 	}
 
 }

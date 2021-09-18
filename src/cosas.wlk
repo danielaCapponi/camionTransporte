@@ -22,9 +22,11 @@ object bumblebee {
 		transformadoEnAuto = !transformadoEnAuto
 	}
 
+	method estaTransformadoEnAuto() = transformadoEnAuto
+
 }
 
-object paqueteDeladrillos {
+object paqueteDeLadrillos {
 
 	var property cantidadDeLadrillos = 0
 
@@ -45,6 +47,8 @@ object arenaAGranel {
 object bateriaAntiaerea {
 
 	var tieneMisiles = false
+
+	method tieneMisiles() = tieneMisiles
 
 	method manipularMisiles() {
 		tieneMisiles = !tieneMisiles
@@ -68,12 +72,16 @@ object contenedorPortuario {
 
 	var property cosas = []
 
+	method vaciar() {
+		cosas.clear()
+	}
+
 	method peso() = 100 + cosas.sum{ cosa => cosa.peso() }
 
 	method nivelPeligrosidad() = if (cosas.isEmpty()) {
 		0
 	} else {
-		cosas.max{ cosa => cosa.nivelPeligrosidad()}
+		cosas.max({ cosa => cosa.nivelPeligrosidad()}).nivelPeligrosidad()
 	}
 
 }

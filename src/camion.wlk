@@ -12,8 +12,6 @@ object camion {
 		cosas.remove(unaCosa)
 	}
 
-	method totalBultos() = cosas.size()
-
 	method tieneAlgoQuePesaEntre(min, max) = !cosas.isEmpty() && cosas.any({ cosa => cosa.peso().between(min, max) })
 
 	method todoPesoPar() = !cosas.isEmpty() && cosas.all{ cosa => cosa.peso().even() }

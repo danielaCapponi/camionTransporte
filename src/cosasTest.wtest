@@ -1,6 +1,94 @@
+import cosas.*
 
-test "testX" {
+describe "Paquete de ladrillos" {
 
-	assert.that(true)
+	method initialize() {
+		paqueteDeLadrillos.cantidadDeLadrillos(10)
+	}
+
+	test "Se puede cambiar la cantidad de ladrillos del paquete" {
+		paqueteDeLadrillos.cantidadDeLadrillos(20)
+		assert.equals(20, paqueteDeLadrillos.cantidadDeLadrillos())
+	}
+
+	test "Se calcula el peso del paquete de ladrillos correctamente, con 10 ladrillos en el paquete" {
+		assert.equals(20, paqueteDeLadrillos.peso())
+	}
+
+	test "Indica correctamente el nivelPeligrosidad" {
+		assert.equals(2, paqueteDeLadrillos.nivelPeligrosidad())
+	}
 
 }
+
+describe "Batería antiaérea" {
+
+	test "Se puede cambiar el estado de tieneMisiles y esto impacta en el peso total" {
+		const pesoInicial = bateriaAntiaerea.peso()
+		bateriaAntiaerea.manipularMisiles()
+		assert.notEquals(pesoInicial, bateriaAntiaerea.peso())
+	}
+
+	test "Indica correctamente el nivelPeligrosidad con y sin misiles" {
+		if (bateriaAntiaerea.tieneMisiles()) {
+			assert.equals(100, bateriaAntiaerea.nivelPeligrosidad())
+		} else {
+			assert.equals(0, bateriaAntiaerea.nivelPeligrosidad())
+		}
+	}
+
+}
+
+describe "Contenedor portuario" {
+
+	method initialize() {
+		contenedorPortuario.vaciar()
+		embalajeDeSeguridad.cosaQueEnvuelve(bumblebee)
+		contenedorPortuario.cosas([ bumblebee, embalajeDeSeguridad, residuosRadioactivos ])
+	}
+
+	test "Indica correctamente las cosas que contiene conteniendo 1 bumblebee" {
+		assert.equals([ bumblebee, embalajeDeSeguridad, residuosRadioactivos ], contenedorPortuario.cosas())
+	}
+
+	test "Calcula correctamente el peso total conteniendo 1 bumblebee" {
+		const pesoTotalDeLasCosas = contenedorPortuario.cosas().sum{ cosa => cosa.peso() }
+		assert.equals(100 + pesoTotalDeLasCosas, contenedorPortuario.peso())
+	}
+
+	test "Calcula correctamente el nivelPeligrosidad total conteniendo 1 bumblebee" {
+		contenedorPortuario.vaciar()
+		contenedorPortuario.cosas([ bumblebee ])
+		assert.equals(15, contenedorPortuario.nivelPeligrosidad())
+	}
+
+	test "Calcula correctamente el nivelPeligrosidad total conteniendo knightRider, embalajeDeSeguridad[bumblebee]" {
+		contenedorPortuario.vaciar()
+		contenedorPortuario.cosas([ knightRider, embalajeDeSeguridad ])
+		assert.equals(10, contenedorPortuario.nivelPeligrosidad())
+	}
+
+}
+
+describe "Embalaje de seguridad" {
+
+	method initialize() {
+		residuosRadioactivos.peso(30)
+		embalajeDeSeguridad.cosaQueEnvuelve(residuosRadioactivos)
+	}
+
+	test "Devuelve correctamente el nivelPeligrosidad" {
+		assert.equals(100, embalajeDeSeguridad.nivelPeligrosidad())
+	}
+
+	test "Devuelve correctamente el peso" {
+		assert.equals(30, embalajeDeSeguridad.peso())
+	}
+
+	test "Se puede modificar la cosa que envuelve" {
+		embalajeDeSeguridad.cosaQueEnvuelve(contenedorPortuario)
+		assert.equals(contenedorPortuario, embalajeDeSeguridad.cosaQueEnvuelve())
+	}
+
+}
+
