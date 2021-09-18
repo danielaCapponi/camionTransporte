@@ -1,9 +1,9 @@
-import cosas.*
+import cosas2.*
 
 object camion {
 
 	var cosas = []
-	const bultos = manejoDeBultos
+	const gestionDeBultos = manejoDeBultos
 
 	method cargar(unaCosa) {
 		cosas.add(unaCosa)
@@ -14,7 +14,7 @@ object camion {
 		cosas.remove(unaCosa)
 	}
 
-	method cargarBulk(cosasACargar) {
+	method cargarBultos(cosasACargar) {
 		cosas = cosasACargar
 	}
 
@@ -22,13 +22,15 @@ object camion {
 		cosas.clear()
 	}
 
+	method cosas() = cosas
+
 	method tieneAlgoQuePesaEntre(min, max) = !cosas.isEmpty() && cosas.any({ cosa => cosa.peso().between(min, max) })
 
 	method todoPesoPar() = !cosas.isEmpty() && cosas.all{ cosa => cosa.peso().even() }
 
 	method hayAlgunoQuePesa(peso) = !cosas.isEmpty() && cosas.any{ cosa => cosa.peso() == peso }
 
-	// Si utilizaba el find daba error al no encontrar nada y me complicó hacer tests... ¿Está bien esta implementación del findOrElse?
+	// Si utilizaba el find daba error al no encontrar nada y me complicó hacer tests... ¿Está bien utilizar el findOrElse?
 	method elDeNivel(nivelAEncontrar) = cosas.findOrElse({ cosa => cosa.nivelPeligrosidad() == nivelAEncontrar }, { false })
 
 	method pesoTotal() = cosas.sum{ cosa => cosa.peso() }
@@ -51,37 +53,34 @@ object camion {
 		cosas.contains(cosa)
 	}
 
-	method totalBultos() = bultos.calcularBultos(cosas)
+	method totalBultos() = gestionDeBultos.calcularBultos(cosas)
 
 }
 
 object manejoDeBultos {
 
-	const cosasQueSumanUnBulto = [ bumblebee, embalajeDeSeguridad ]
-	const cosasQueSumanDosBultos = [ knightRider, arenaAGranel, residuosRadioactivos ]
+	const cosasQueSumanUnBulto = [ knightRider, arenaAGranel, residuosRadioactivos ]
+	const cosasQueSumanDosBultos = [ bumblebee, embalajeDeSeguridad ]
 
 	method calcularBultos(cosas) {
-		var bultosContados = self.cantidadDeCosasQueValenUnBulto(cosas)
-		bultosContados += self.cantidadDeCosasQueValenDosBultos(cosas) * 2
+		var bultosContados = self.cantidadDeCosasQueEquivalenAUnBulto(cosas)
+		bultosContados += self.cantidadDeCosasQueEquivalenADosBultos(cosas) * 2
 		bultosContados += self.calcularBultosPorCosasConTratamientoEspecial(cosas)
 		return bultosContados
 	}
 
 	method calcularBultosPorCosasConTratamientoEspecial(cosas) {
-		var bultosContados = 0
-			// Sumo la cantidad de bultos que se generan por los ladrillos, si lo hubiera
+		var bultos = 0
 		if (self.hayLadrillos(cosas)) {
-			bultosContados = self.calcularBultosPorLadrillos(cosas)
+			bultos += self.calcularBultosPorLadrillos(cosas)
 		}
 		if (self.hayBateriaAntiaerea(cosas)) {
-			// Sumo la cantidad de bultos que se generan por la batería, si lo hubiera
-			bultosContados = self.calcularBultosPorBateriaAntiaerea(cosas)
+			bultos += self.calcularBultosPorBateriaAntiaerea(cosas)
 		}
-			// Sumo el contenedor portuario y sus cosas, si las hubiera
 		if (self.hayContenedorPortuario(cosas)) {
-			bultosContados = self.calcularBultosPorContenedor(cosas)
+			bultos += 1 + self.calcularBultosPorContenedor(cosas)
 		}
-		return bultosContados
+		return bultos
 	}
 
 	method hayLadrillos(cosas) = cosas.contains(paqueteDeLadrillos)
@@ -106,12 +105,12 @@ object manejoDeBultos {
 
 	method calcularBultosPorContenedor(cosas) {
 		const contenedor = cosas.find{ cosa => cosa == contenedorPortuario }
-		return 1 + self.calcularBultos(contenedor.cosas())
+		return self.calcularBultos(contenedor.cosas())
 	}
 
-	method cantidadDeCosasQueValenUnBulto(cosas) = cosas.filter({ cosa => cosasQueSumanUnBulto.contains(cosa) }).size()
+	method cantidadDeCosasQueEquivalenAUnBulto(cosas) = cosas.filter({ cosa => cosasQueSumanUnBulto.contains(cosa) }).size()
 
-	method cantidadDeCosasQueValenDosBultos(cosas) = cosas.filter({ cosa => cosasQueSumanDosBultos.contains(cosa) }).size()
+	method cantidadDeCosasQueEquivalenADosBultos(cosas) = cosas.filter({ cosa => cosasQueSumanDosBultos.contains(cosa) }).size()
 
 }
 

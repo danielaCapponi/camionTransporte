@@ -22,7 +22,7 @@ describe "Consecuencias de la carga" {
 
 	test "bumblebee" {
 		camion.cargar(bumblebee)
-		assert.that(!bumblebee.estaTransformadoEnAuto())
+		assert.notThat(bumblebee.estaTransformadoEnAuto())
 	}
 
 	test "paqueteDeLadrillos" {
@@ -45,6 +45,7 @@ describe "Consecuencias de la carga" {
 	test "contenedorPortuario" {
 		const pesoInicial = contenedorPortuario.peso()
 		camion.cargar(contenedorPortuario)
+		// [ residuosRadioactivos, arenaAGranel ]
 		assert.equals(pesoInicial + 35, contenedorPortuario.peso())
 	}
 
@@ -58,6 +59,42 @@ describe "Consecuencias de la carga" {
 		const embalajeDeSeguridadInicial = embalajeDeSeguridad
 		camion.cargar(embalajeDeSeguridad)
 		assert.equals(embalajeDeSeguridadInicial, embalajeDeSeguridad)
+	}
+
+}
+
+describe "totalBultos()" {
+
+	method initialize() {
+		camion.descargarTodo()
+	}
+
+	test "Son 3 bultos si el camión lleva KnightRider, arena a granel y residuos radioactivos " {
+		camion.cargarBultos([ knightRider, arenaAGranel, residuosRadioactivos ])
+		assert.equals(3, camion.totalBultos())
+	}
+
+	test "Bumblebee y embalajeDeSeguridad equivalen a 2 bultos cada uno" {
+		camion.cargarBultos([ bumblebee, embalajeDeSeguridad ])
+		assert.equals(4, camion.totalBultos())
+	}
+
+	test "El paquete de ladrillos con menos de 101 ladrillos equivale a 1 bulto" {
+		paqueteDeLadrillos.cantidadDeLadrillos(50)
+		camion.cargarBultos([ paqueteDeLadrillos ])
+		assert.equals(1, camion.totalBultos())
+	}
+
+	test "El paquete de ladrillos entre 101 y 300 equivale a 2 bultos" {
+		paqueteDeLadrillos.cantidadDeLadrillos(150)
+		camion.cargarBultos([ paqueteDeLadrillos ])
+		assert.equals(2, camion.totalBultos())
+	}
+
+	test "El paquete de ladrillos con más de 300 ladrillos equivale a 3 bultos" {
+		paqueteDeLadrillos.cantidadDeLadrillos(350)
+		camion.cargarBultos([ paqueteDeLadrillos ])
+		assert.equals(3, camion.totalBultos())
 	}
 
 }

@@ -49,11 +49,11 @@ object paqueteDeLadrillos {
 
 	method bultos() {
 		var bultos = 0
-		if (self.cantidadDeLadrillos() > 300) {
+		if (cantidadDeLadrillos > 300) {
 			bultos = 3
-		} else if (self.cantidadDeLadrillos().between(101, 300)) {
+		} else if (cantidadDeLadrillos.between(101, 300)) {
 			bultos = 2
-		} else if (self.cantidadDeLadrillos() > 0) {
+		} else if (cantidadDeLadrillos > 0) {
 			bultos = 1
 		}
 		return bultos
