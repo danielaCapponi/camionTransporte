@@ -5,6 +5,7 @@ describe "Tests para la carga del camión" {
 
 	method initialize() {
 		camion.cargar(bumblebee)
+		arenaAGranel.peso(2000)
 	}
 
 	test "Comprobar que se puede agregar carga al camión" {
@@ -26,15 +27,26 @@ describe "Tests para la carga del camión" {
 	}
 
 	test "Evalúa el nivel de peligrosidad de la carga " {
-		assert.that(camion.elDeNivel(15) == bumblebee)
-		assert.notThat(camion.elDeNivel(20))
+		assert.equals(bumblebee, camion.elDeNivel(15))
+		// En este test quise implementar el assert.throwsException, porque usaba el find en el mensaje elDeNivel y al no encontrar el valor indicado, devolvía error. Pero no pude hacerlo funcionar, no sabría cómo implementarlo. Entonces utilicé el findOrElse y forcé un falso en caso de no encontrarse el valor.
+		assert.notEquals(bumblebee, camion.elDeNivel(20))
+		assert.that(camion.superaNivelPeligrosidad(14))
+		assert.notThat(camion.superaNivelPeligrosidad(16))
 	}
 
 	test "Evalúa el peso total correctamente" {
-		assert.that(camion.pesoTotal() == 800)
+		assert.equals(800, camion.pesoTotal())
 		camion.cargar(bumblebee)
-		assert.that(camion.pesoTotal() == 1600)
+		assert.equals(1600, camion.pesoTotal())
 		assert.notThat(camion.excedidoDePeso())
+		camion.cargar(arenaAGranel)
+		assert.that(camion.excedidoDePeso())
+	}
+
+	test "Evalúa el peso de los objetos de la carga correctamente" {
+		camion.cargar(knightRider)
+		camion.cargar(arenaAGranel)
+		assert.equals(arenaAGranel, camion.cosaMasPesada())
 	}
 
 }
