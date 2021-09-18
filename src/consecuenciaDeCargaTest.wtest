@@ -1,0 +1,64 @@
+import cosas2.*
+import camion2.*
+
+describe "Consecuencias de la carga" {
+
+	method initialize() {
+		camion.descargarTodo()
+		if (!bumblebee.estaTransformadoEnAuto()) {
+			bumblebee.transformar()
+		}
+		if (bateriaAntiaerea.tieneMisiles()) {
+			bateriaAntiaerea.manipularMisiles()
+		}
+		contenedorPortuario.cosas([ residuosRadioactivos, arenaAGranel ])
+	}
+
+	test "knightRider" {
+		const knightRiderInicial = knightRider
+		camion.cargar(knightRider)
+		assert.equals(knightRiderInicial, knightRider)
+	}
+
+	test "bumblebee" {
+		camion.cargar(bumblebee)
+		assert.that(!bumblebee.estaTransformadoEnAuto())
+	}
+
+	test "paqueteDeLadrillos" {
+		const cantidadDeLadrillosInicial = paqueteDeLadrillos.cantidadDeLadrillos()
+		camion.cargar(paqueteDeLadrillos)
+		assert.equals(cantidadDeLadrillosInicial + 12, paqueteDeLadrillos.cantidadDeLadrillos())
+	}
+
+	test "arenaAGranel" {
+		const pesoInicial = arenaAGranel.peso()
+		camion.cargar(arenaAGranel)
+		assert.equals(pesoInicial + 20, arenaAGranel.peso())
+	}
+
+	test "bateriaAntiaerea" {
+		camion.cargar(bateriaAntiaerea)
+		assert.that(bateriaAntiaerea.tieneMisiles())
+	}
+
+	test "contenedorPortuario" {
+		const pesoInicial = contenedorPortuario.peso()
+		camion.cargar(contenedorPortuario)
+		assert.equals(pesoInicial + 35, contenedorPortuario.peso())
+	}
+
+	test "residuosRadioactivos" {
+		const pesoInicial = residuosRadioactivos.peso()
+		camion.cargar(residuosRadioactivos)
+		assert.equals(pesoInicial + 15, residuosRadioactivos.peso())
+	}
+
+	test "embalajeDeSeguridad" {
+		const embalajeDeSeguridadInicial = embalajeDeSeguridad
+		camion.cargar(embalajeDeSeguridad)
+		assert.equals(embalajeDeSeguridadInicial, embalajeDeSeguridad)
+	}
+
+}
+

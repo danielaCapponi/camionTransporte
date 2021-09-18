@@ -18,11 +18,11 @@ object bumblebee {
 		30
 	}
 
+	method estaTransformadoEnAuto() = transformadoEnAuto
+
 	method transformar() {
 		transformadoEnAuto = !transformadoEnAuto
 	}
-
-	method estaTransformadoEnAuto() = transformadoEnAuto
 
 }
 

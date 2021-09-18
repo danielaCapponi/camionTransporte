@@ -1,7 +1,0 @@
-import camion2.*
-import cosas2.*
-
-describe "Test para el camión" {
-
-}
-

@@ -4,6 +4,9 @@ object knightRider {
 
 	method nivelPeligrosidad() = 10
 
+	method esCargada() {
+	}
+
 }
 
 object bumblebee {
@@ -24,6 +27,12 @@ object bumblebee {
 
 	method estaTransformadoEnAuto() = transformadoEnAuto
 
+	method esCargada() {
+		if (self.estaTransformadoEnAuto()) {
+			self.transformar()
+		}
+	}
+
 }
 
 object paqueteDeLadrillos {
@@ -34,6 +43,22 @@ object paqueteDeLadrillos {
 
 	method nivelPeligrosidad() = 2
 
+	method esCargada() {
+		self.cantidadDeLadrillos(cantidadDeLadrillos + 12)
+	}
+
+	method bultos() {
+		var bultos = 0
+		if (self.cantidadDeLadrillos() > 300) {
+			bultos = 3
+		} else if (self.cantidadDeLadrillos().between(101, 300)) {
+			bultos = 2
+		} else if (self.cantidadDeLadrillos() > 0) {
+			bultos = 1
+		}
+		return bultos
+	}
+
 }
 
 object arenaAGranel {
@@ -41,6 +66,10 @@ object arenaAGranel {
 	var property peso = 0
 
 	method nivelPeligrosidad() = 1
+
+	method esCargada() {
+		self.peso(peso + 20)
+	}
 
 }
 
@@ -66,11 +95,17 @@ object bateriaAntiaerea {
 		0
 	}
 
+	method esCargada() {
+		if (!self.tieneMisiles()) {
+			self.manipularMisiles()
+		}
+	}
+
 }
 
 object contenedorPortuario {
 
-	var property cosas = []
+	var property cosas = [ bultoVacio ]
 
 	method vaciar() {
 		cosas.clear()
@@ -84,6 +119,10 @@ object contenedorPortuario {
 		cosas.max({ cosa => cosa.nivelPeligrosidad()}).nivelPeligrosidad()
 	}
 
+	method esCargada() {
+		cosas.forEach({ cosa => cosa.esCargada()})
+	}
+
 }
 
 object residuosRadioactivos {
@@ -92,15 +131,33 @@ object residuosRadioactivos {
 
 	method nivelPeligrosidad() = 200
 
+	method esCargada() {
+		self.peso(peso + 15)
+	}
+
 }
 
 object embalajeDeSeguridad {
 
-	var property cosaQueEnvuelve
+	var property cosaQueEnvuelve = bultoVacio
 
 	method peso() = cosaQueEnvuelve.peso()
 
 	method nivelPeligrosidad() = cosaQueEnvuelve.nivelPeligrosidad() / 2
+
+	method esCargada() {
+	}
+
+}
+
+object bultoVacio {
+
+	method peso() = 0
+
+	method nivelPeligrosidad() = 0
+
+	method esCargada() {
+	}
 
 }
 

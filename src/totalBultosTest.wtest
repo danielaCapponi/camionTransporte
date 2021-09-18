@@ -1,0 +1,17 @@
+import camion2.*
+import cosas2.*
+
+describe "totalBultos()" {
+
+	test "Son 3 bultos si el camión lleva KnightRider, arena a granel y residuos radioactivos " {
+		camion.cargarBulk([ knightRider, arenaAGranel, residuosRadioactivos ])
+		assert.equals(3, camion.totalBultos())
+	}
+
+	test "Son 2 bultos para cada uno de bumblebee y embalajeDeSeguridad" {
+		camion.cargarBulk([ bumblebee, embalajeDeSeguridad ])
+		assert.equals(4, camion.totalBultos())
+	}
+
+}
+
