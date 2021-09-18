@@ -47,11 +47,11 @@ describe "Contenedor portuario" {
 		contenedorPortuario.cosas([ bumblebee, embalajeDeSeguridad, residuosRadioactivos ])
 	}
 
-	test "Indica correctamente las cosas que contiene conteniendo 1 bumblebee" {
+	test "Indica correctamente las cosas que contiene conteniendo bumblebee, embalajeDeSeguridad, residuosRadioactivos" {
 		assert.equals([ bumblebee, embalajeDeSeguridad, residuosRadioactivos ], contenedorPortuario.cosas())
 	}
 
-	test "Calcula correctamente el peso total conteniendo 1 bumblebee" {
+	test "Calcula correctamente el peso total conteniendo bumblebee, embalajeDeSeguridad, residuosRadioactivos" {
 		const pesoTotalDeLasCosas = contenedorPortuario.cosas().sum{ cosa => cosa.peso() }
 		assert.equals(100 + pesoTotalDeLasCosas, contenedorPortuario.peso())
 	}
