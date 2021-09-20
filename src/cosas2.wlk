@@ -7,6 +7,8 @@ object knightRider {
 	method esCargada() {
 	}
 
+	method bultos() = 1
+
 }
 
 object bumblebee {
@@ -32,6 +34,8 @@ object bumblebee {
 			self.transformar()
 		}
 	}
+
+	method bultos() = 2
 
 }
 
@@ -71,6 +75,8 @@ object arenaAGranel {
 		self.peso(peso + 20)
 	}
 
+	method bultos() = 1
+
 }
 
 object bateriaAntiaerea {
@@ -101,6 +107,12 @@ object bateriaAntiaerea {
 		}
 	}
 
+	method bultos() = if (self.tieneMisiles()) {
+		2
+	} else {
+		1
+	}
+
 }
 
 object contenedorPortuario {
@@ -123,6 +135,8 @@ object contenedorPortuario {
 		cosas.forEach({ cosa => cosa.esCargada()})
 	}
 
+	method bultos() = 1 + cosas.sum{ cosa => cosa.bultos() }
+
 }
 
 object residuosRadioactivos {
@@ -134,6 +148,8 @@ object residuosRadioactivos {
 	method esCargada() {
 		self.peso(peso + 15)
 	}
+
+	method bultos() = 1
 
 }
 
@@ -148,6 +164,8 @@ object embalajeDeSeguridad {
 	method esCargada() {
 	}
 
+	method bultos() = 2
+
 }
 
 object bultoVacio {
@@ -158,6 +176,8 @@ object bultoVacio {
 
 	method esCargada() {
 	}
+
+	method bultos() = 0
 
 }
 
