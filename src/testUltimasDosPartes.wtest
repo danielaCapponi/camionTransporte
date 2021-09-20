@@ -67,6 +67,9 @@ describe "totalBultos()" {
 
 	method initialize() {
 		camion.descargarTodo()
+		if (bateriaAntiaerea.tieneMisiles()) {
+			bateriaAntiaerea.manipularMisiles()
+		}
 	}
 
 	test "Son 3 bultos si el camión lleva KnightRider, arena a granel y residuos radioactivos " {
@@ -95,6 +98,19 @@ describe "totalBultos()" {
 		paqueteDeLadrillos.cantidadDeLadrillos(350)
 		camion.cargarBultos([ paqueteDeLadrillos ])
 		assert.equals(3, camion.totalBultos())
+	}
+
+	test "El contenedor portuario devuelve los bultos que contiene + 1" {
+		contenedorPortuario.cosas([ bumblebee, embalajeDeSeguridad, residuosRadioactivos ])
+		assert.equals(6, contenedorPortuario.bultos())
+		camion.cargar(contenedorPortuario)
+		assert.equals(6, camion.totalBultos())
+	}
+
+	test "La batería antiaerea equivale a un bulto sin misiles, y a dos bultos con misiles" {
+		assert.equals(1, bateriaAntiaerea.bultos())
+		bateriaAntiaerea.manipularMisiles()
+		assert.equals(2, bateriaAntiaerea.bultos())
 	}
 
 }
