@@ -3,7 +3,6 @@ import cosas2.*
 object camion {
 
 	var cosas = []
-	const gestionDeBultos = manejoDeBultos
 
 	method cargar(unaCosa) {
 		cosas.add(unaCosa)
@@ -53,64 +52,7 @@ object camion {
 		cosas.contains(cosa)
 	}
 
-	method totalBultos() = gestionDeBultos.calcularBultos(cosas)
-
-}
-
-object manejoDeBultos {
-
-	const cosasQueSumanUnBulto = [ knightRider, arenaAGranel, residuosRadioactivos ]
-	const cosasQueSumanDosBultos = [ bumblebee, embalajeDeSeguridad ]
-
-	method calcularBultos(cosas) {
-		var bultosContados = self.cantidadDeCosasQueEquivalenAUnBulto(cosas)
-		bultosContados += self.cantidadDeCosasQueEquivalenADosBultos(cosas) * 2
-		bultosContados += self.calcularBultosPorCosasConTratamientoEspecial(cosas)
-		return bultosContados
-	}
-
-	method calcularBultosPorCosasConTratamientoEspecial(cosas) {
-		var bultos = 0
-		if (self.hayLadrillos(cosas)) {
-			bultos += self.calcularBultosPorLadrillos(cosas)
-		}
-		if (self.hayBateriaAntiaerea(cosas)) {
-			bultos += self.calcularBultosPorBateriaAntiaerea(cosas)
-		}
-		if (self.hayContenedorPortuario(cosas)) {
-			bultos += 1 + self.calcularBultosPorContenedor(cosas)
-		}
-		return bultos
-	}
-
-	method hayLadrillos(cosas) = cosas.contains(paqueteDeLadrillos)
-
-	method hayBateriaAntiaerea(cosas) = cosas.contains(bateriaAntiaerea)
-
-	method hayContenedorPortuario(cosas) = cosas.contains(contenedorPortuario)
-
-	method calcularBultosPorLadrillos(cosas) {
-		const ladrillos = cosas.find{ cosa => cosa == paqueteDeLadrillos }
-		return ladrillos.bultos()
-	}
-
-	method calcularBultosPorBateriaAntiaerea(cosas) {
-		const bateria = cosas.find{ cosa => cosa == bateriaAntiaerea }
-		if (bateria.tieneMisiles()) {
-			return 2
-		} else {
-			return 1
-		}
-	}
-
-	method calcularBultosPorContenedor(cosas) {
-		const contenedor = cosas.find{ cosa => cosa == contenedorPortuario }
-		return self.calcularBultos(contenedor.cosas())
-	}
-
-	method cantidadDeCosasQueEquivalenAUnBulto(cosas) = cosas.filter({ cosa => cosasQueSumanUnBulto.contains(cosa) }).size()
-
-	method cantidadDeCosasQueEquivalenADosBultos(cosas) = cosas.filter({ cosa => cosasQueSumanDosBultos.contains(cosa) }).size()
+	method totalBultos() = cosas.sum{cosa=>cosa.bultos()}
 
 }
 
